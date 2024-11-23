@@ -40,3 +40,15 @@ func (p *ProductRepository) ListProducts() ([]model.Product, error) {
 
 	return products, nil
 }
+
+func (p *ProductRepository) ListProduct(productId string) ([]model.Product, error) {
+	var products []model.Product
+
+	err := p.db.First(&products, "id = ?", productId).Error
+
+	if err != nil {
+		fmt.Println(err)
+		return []model.Product{}, err
+	}
+	return products, nil
+}

@@ -11,12 +11,14 @@ import (
 type ProductController struct {
 	createProductUseCase usecase.CreateProductUseCase
 	listProductsUseCase  usecase.ListProductsUseCase
+	listProductUseCase  usecase.ListProductUseCase
 }
 
-func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase) *ProductController {
+func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase, listById usecase.ListProductUseCase) *ProductController {
 	return &ProductController{
 		createProductUseCase: create,
 		listProductsUseCase:  listAll,
+		listProductUseCase:  listById,
 	}
 }
 
@@ -47,4 +49,17 @@ func (p *ProductController) CreateProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, createProduct)
+}
+
+func (p *ProductController) ListProductById(ctx *gin.Context) {
+	var productId = ctx.Param("id")
+
+	product, err := p.listProductUseCase.Handle(productId)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, product)
 }
