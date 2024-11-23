@@ -2,7 +2,8 @@ package main
 
 import (
 	"api/database"
-	"api/lib"
+	"api/pkg"
+	"api/routes"
 	"log"
 
 	"github.com/joho/godotenv"
@@ -15,6 +16,7 @@ func main() {
   }
 
 	database.ConnectDB()
-	server := lib.Server()
+	server := pkg.Server()
+	routes.Route(server);
 	server.Run(":8080")
 }
