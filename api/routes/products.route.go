@@ -8,11 +8,7 @@ import (
 )
 
 func ProductRoutes(server *gin.Engine) {
-	server.GET("/products", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{
-			"message": "ok",
-		})
-	})
+	server.GET("/products", controller.InitializedProductController().ListProducts)
 	
 	server.GET("/products/:id", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
@@ -20,7 +16,7 @@ func ProductRoutes(server *gin.Engine) {
 		})
 	})
 	
-	server.POST("/product", controller.InitializedCreateProductController().CreateProduct)
+	server.POST("/product", controller.InitializedProductController().CreateProduct)
 	
 	server.PUT("/products/:id", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{

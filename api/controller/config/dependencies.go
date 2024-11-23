@@ -7,10 +7,11 @@ import (
 	usecase "api/usecase/product"
 )
 
-func InitializedCreateProductController() *controller.ProductController {
+func InitializedProductController() *controller.ProductController {
 	productRepository := repository.NewProductRepository(database.ConnectDB())
 	createProductUseCase := usecase.NewCreateProductUseCase(*productRepository)
-	productController := controller.NewProductController(*createProductUseCase)
+	listProductsUseCase := usecase.NewListProductsUseCase(*productRepository)
+	productController := controller.NewProductController(*createProductUseCase, *listProductsUseCase)
 
 	return productController
 }

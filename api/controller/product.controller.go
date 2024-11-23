@@ -10,12 +10,25 @@ import (
 
 type ProductController struct {
 	createProductUseCase usecase.CreateProductUseCase
+	listProductsUseCase  usecase.ListProductsUseCase
 }
 
-func NewProductController(create usecase.CreateProductUseCase) *ProductController {
+func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase) *ProductController {
 	return &ProductController{
 		createProductUseCase: create,
+		listProductsUseCase:  listAll,
 	}
+}
+
+func (p *ProductController) ListProducts(ctx *gin.Context) {
+	listProducts, err := p.listProductsUseCase.Handle()
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, listProducts)
 }
 
 func (p *ProductController) CreateProduct(ctx *gin.Context) {
