@@ -1,6 +1,7 @@
 package main
 
 import (
+	"api/database"
 	"api/lib"
 	"log"
 
@@ -13,6 +14,7 @@ func main() {
     log.Fatal("Error loading .env file")
   }
 
+	database.ConnectDB()
 	server := lib.Server()
 	server.Run(":8080")
 }

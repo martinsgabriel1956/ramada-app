@@ -1,5 +1,4 @@
-version: "3.8"
-
+name: ramada-app
 services:
   app:
     image: golang:1.23.3
@@ -13,9 +12,15 @@ services:
       - db
 
   db:
-    image: mysql:8.0
+    container_name: ramada_db
+    image: mysql:8.0.40
     restart: always
     env_file:
       - .env
     ports:
       - "3306:3306"
+    volumes:
+      - mysqlData:/var/lib/mysql
+
+volumes:
+  mysqlData: {}
