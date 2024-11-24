@@ -13,7 +13,8 @@ func InitializedProductController() *controller.ProductController {
 	listProductsUseCase := usecase.NewListProductsUseCase(*productRepository)
 	listProductUseCase := usecase.NewListProductUseCase(*productRepository)
 	updateProductUseCase := usecase.NewUpdateProductUseCase(*productRepository)
-	productController := controller.NewProductController(*createProductUseCase, *listProductsUseCase, *listProductUseCase, *updateProductUseCase)
+	deleteProductUseCase := usecase.NewDeleteProductUseCase(*productRepository)
+	productController := controller.NewProductController(*createProductUseCase, *listProductsUseCase, *listProductUseCase, *updateProductUseCase, *deleteProductUseCase)
 
 	return productController
 }

@@ -13,14 +13,16 @@ type ProductController struct {
 	listProductsUseCase  usecase.ListProductsUseCase
 	listProductUseCase  usecase.ListProductUseCase
 	updateProductUseCase usecase.UpdateProductUseCase
+	deleteProductUseCase usecase.DeleteProductUseCase
 }
 
-func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase, listById usecase.ListProductUseCase, update usecase.UpdateProductUseCase) *ProductController {
+func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase, listById usecase.ListProductUseCase, update usecase.UpdateProductUseCase, delete usecase.DeleteProductUseCase ) *ProductController {
 	return &ProductController{
 		createProductUseCase: create,
 		listProductsUseCase:  listAll,
 		listProductUseCase:  listById,
 		updateProductUseCase: update,
+		deleteProductUseCase: delete,
 	}
 }
 
@@ -83,4 +85,16 @@ func (p *ProductController) UpdateProduct(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, updateProduct)
+}
+
+func (p *ProductController) DeleteProduct(ctx *gin.Context) {
+	var productId = ctx.Param("id")
+	err := p.deleteProductUseCase.Handle(productId)
+
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"message": "Product deleted successfully"})
 }

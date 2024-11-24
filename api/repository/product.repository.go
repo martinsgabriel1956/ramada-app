@@ -72,3 +72,23 @@ func (p *ProductRepository) UpdateProduct(productId string, productBody model.Pr
 
 	return product, nil
 }
+
+func (p *ProductRepository) DeleteProduct(productId string) error {
+	var product model.Product
+
+	findProductErr := p.db.First(&product, "id = ?", productId).Error
+
+	if findProductErr != nil {
+		fmt.Println(findProductErr)
+		return findProductErr
+	}
+
+	deleteProductErr := p.db.Delete(&product).Error
+
+	if deleteProductErr != nil {
+		fmt.Println(deleteProductErr)
+		return deleteProductErr
+	}
+
+	return nil
+}
