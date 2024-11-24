@@ -12,13 +12,15 @@ type ProductController struct {
 	createProductUseCase usecase.CreateProductUseCase
 	listProductsUseCase  usecase.ListProductsUseCase
 	listProductUseCase  usecase.ListProductUseCase
+	updateProductUseCase usecase.UpdateProductUseCase
 }
 
-func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase, listById usecase.ListProductUseCase) *ProductController {
+func NewProductController(create usecase.CreateProductUseCase, listAll usecase.ListProductsUseCase, listById usecase.ListProductUseCase, update usecase.UpdateProductUseCase) *ProductController {
 	return &ProductController{
 		createProductUseCase: create,
 		listProductsUseCase:  listAll,
 		listProductUseCase:  listById,
+		updateProductUseCase: update,
 	}
 }
 
@@ -62,4 +64,23 @@ func (p *ProductController) ListProductById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, product)
+}
+
+func (p *ProductController) UpdateProduct(ctx *gin.Context) {
+	var productId = ctx.Param("id")
+	var product model.Product
+
+	if err := ctx.BindJSON(&product); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	updateProduct, err := p.updateProductUseCase.Handle(productId, product)
+	
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, updateProduct)
 }

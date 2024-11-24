@@ -52,3 +52,23 @@ func (p *ProductRepository) ListProduct(productId string) ([]model.Product, erro
 	}
 	return products, nil
 }
+
+func (p *ProductRepository) UpdateProduct(productId string, productBody model.Product) (model.Product, error) {
+	var product model.Product
+
+	findProductErr := p.db.First(&product, "id = ?", productId).Error
+	
+	if findProductErr != nil {
+		fmt.Println(findProductErr)
+		return model.Product{}, findProductErr
+	}
+
+	updateProductErr := p.db.Model(product).Updates(productBody).Error
+
+	if updateProductErr != nil {
+		fmt.Println(updateProductErr)
+		return model.Product{}, updateProductErr
+	}
+
+	return product, nil
+}
