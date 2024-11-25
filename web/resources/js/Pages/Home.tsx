@@ -2,10 +2,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Button } from '@/Components/ui/button';
 import { Head } from '@inertiajs/react';
 import { useHome } from './useHome';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit } from 'lucide-react';
+import { DeleteProductModal } from '@/Components/modal/delete';
 
 export default function Home() {
-	const { products } = useHome();
+	const { products, handleCloseDeleteProductModal, isOpenDeleteModal } = useHome();
 
 	return (
 		<>
@@ -29,7 +30,7 @@ export default function Home() {
 						className='bg-gray-700'
 					>
 						{products.map(product => (
-							<TableRow key={product.id}>
+							<TableRow key={product.ID}>
 								<TableCell className='text-white font-semibold text-base'>
 									{product.name}
 								</TableCell>
@@ -49,9 +50,11 @@ export default function Home() {
 									<Button variant="outline" size="icon" className='bg-transparent text-white border-none' >
 										<Edit />
 									</Button>
-									<Button variant="outline" size="icon" className='bg-transparent text-white border-none' >
-										<Trash2 />
-									</Button>
+									<DeleteProductModal
+										isOpen={isOpenDeleteModal}
+										onClose={handleCloseDeleteProductModal}
+										productId={product.ID}
+									/>
 								</TableCell>
 							</TableRow>
 						))}

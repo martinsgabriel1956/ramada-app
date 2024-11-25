@@ -11,4 +11,11 @@ class ProductController extends Controller {
 
 		return response()->json($response->json());
 	}
+
+	public function delete(string $id) {
+		echo $id;
+
+		$response = Http::delete("http://localhost:8080/products/{$id}");
+		return response()->json($response->json());
+	}
 }

@@ -2,7 +2,7 @@ import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 
 type Product = {
-	id: string;
+	ID: string;
 	name: string;
 	description: string;
 	price: number;
@@ -11,14 +11,17 @@ type Product = {
 
 export function useHome() {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
 
 	const getProductsRequest = useCallback(async () => {
 		const productsRequest = await axios.get("/api/products");
-
 		const productsData = productsRequest.data;
-
 		setProducts(productsData);
 	}, []);
+
+	function handleCloseDeleteProductModal() {
+		setIsOpenDeleteModal(!isOpenDeleteModal);
+	}
 
 	useEffect(() => {
 		getProductsRequest();
@@ -26,5 +29,7 @@ export function useHome() {
 
 	return {
 		products,
+		handleCloseDeleteProductModal,
+		isOpenDeleteModal,
 	};
 }
