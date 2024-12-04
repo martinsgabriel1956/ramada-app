@@ -30,14 +30,12 @@ func (p *ProductRepository) CreateProduct(product model.Product) (model.Product,
 
 func (p *ProductRepository) ListProducts() ([]model.Product, error) {
 	var products []model.Product
+	result := p.db.Find(&products)
 
-	err := p.db.Find(&products).Error
-
-	if err != nil {
-		fmt.Println(err)
-		return []model.Product{}, err
+	if result.Error != nil {
+		return nil, result.Error
 	}
-
+	
 	return products, nil
 }
 
@@ -83,7 +81,7 @@ func (p *ProductRepository) DeleteProduct(productId string) error {
 		return findProductErr
 	}
 
-	deleteProductErr := p.db.Delete(&product).Error
+	deleteProductErr := p.db.Unscoped().Delete(&product).Error
 
 	if deleteProductErr != nil {
 		fmt.Println(deleteProductErr)

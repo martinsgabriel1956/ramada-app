@@ -25,7 +25,7 @@ export function useHome() {
 
 	useEffect(() => {
 		getProductsRequest();
-	}, []);
+	}, [getProductsRequest]);
 
 	return {
 		products,
