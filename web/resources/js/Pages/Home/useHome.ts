@@ -1,3 +1,4 @@
+import { router } from "@inertiajs/react";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
 
@@ -23,6 +24,10 @@ export function useHome() {
 		setIsOpenDeleteModal(!isOpenDeleteModal);
 	}
 
+	const handleUpdateProduct = useCallback((productId: string) => {
+		router.get(`/product/${productId}`);
+	}, []);
+
 	useEffect(() => {
 		getProductsRequest();
 	}, [getProductsRequest]);
@@ -31,5 +36,6 @@ export function useHome() {
 		products,
 		handleCloseDeleteProductModal,
 		isOpenDeleteModal,
+		handleUpdateProduct,
 	};
 }

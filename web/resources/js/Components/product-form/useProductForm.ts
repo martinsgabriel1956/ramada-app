@@ -1,5 +1,10 @@
 import { useErrors } from "@/hooks/useErrors";
-import { type ChangeEvent, type FormEvent, useState } from "react";
+import {
+	type ChangeEvent,
+	type FormEvent,
+	useImperativeHandle,
+	useState,
+} from "react";
 
 type Product = {
 	name: string;
@@ -10,15 +15,35 @@ type Product = {
 
 type useProductFormProps = {
 	onSubmit: (product: Product) => Promise<void>;
+	ref: React.ForwardedRef<ProductFormRef>;
 };
 
-export function useProductForm({ onSubmit }: useProductFormProps) {
+type ProductFormRef = {
+	setFieldsValues: (product: Product) => void;
+};
+
+export function useProductForm({ onSubmit, ref }: useProductFormProps) {
 	const [name, setName] = useState("");
 	const [price, setPrice] = useState(0);
 	const [description, setDescription] = useState("");
 	const [category, setCategory] = useState("");
 
 	const { getErrorMessageByFieldName, setError, removeError } = useErrors();
+
+	useImperativeHandle<ProductFormRef, ProductFormRef>(ref, () => ({
+		setFieldsValues: (product: Product) => {
+			setName(product.name ?? "");
+			setPrice(product.price ?? 0);
+			setDescription(product.description ?? "");
+			setCategory(product.category ?? "");
+		},
+		resetFields: () => {
+			setName("");
+			setPrice(0);
+			setDescription("");
+			setCategory("");
+		},
+	}));
 
 	function handleNameChange(event: ChangeEvent<HTMLInputElement>) {
 		setName(event.target.value);
@@ -86,5 +111,9 @@ export function useProductForm({ onSubmit }: useProductFormProps) {
 		handleDescriptionChange,
 		handleCategoryChange,
 		getErrorMessageByFieldName,
+		name,
+		price,
+		description,
+		category,
 	};
 }

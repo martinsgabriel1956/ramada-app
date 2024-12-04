@@ -32,5 +32,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/create-product', [ProductController::class, 'createProduct']);
+Route::get('/product/{id}', [ProductController::class, 'updateProduct']);
 
 require __DIR__.'/auth.php';

@@ -16,6 +16,11 @@ class ProductController extends Controller {
 		return response()->json($response->json());
 	}
 
+	public function show(string $id) {
+		$response = Http::get("http://localhost:8080/products/$id");
+		return response()->json($response->json());
+	}
+
 	public function create(Request $request) {
 		$product = $request->json()->all()['body'];
 
@@ -41,13 +46,45 @@ class ProductController extends Controller {
 
 		return response()->json($response->json());
 	}
+	public function update(Request $request, string $id) {
+		$product = $request->json()->all();
+
+		$validated = Validator::make($product, [
+			'name' => 'required|string|max:255',
+			'price' => 'required|numeric|min:0',
+			'description' => 'nullable|string',
+			'category' => 'required|string|max:255',
+		]);
+
+		if ($validated->fails()) {
+			return response()->json($validated->errors(), 400);
+		}
+
+		$formattedBody = [
+			'Name' => $product['name'],
+			'Price' => $product['price'],
+			'Description' => $product['description'],
+			'Category' => $product['category'],
+		];
+
+		$response = Http::put("http://localhost:8080/products/{$id}", $formattedBody);
+
+		return response()->json($response->json());
+	}
 
 	public function delete(string $id) {
 		$response = Http::delete("http://localhost:8080/products/{$id}");
 		return response()->json($response->json());
 	}
 
+
 	public function createProduct(): Response {
 		return Inertia::render('CreateProduct/index');
+	}
+
+	public function updateProduct(string $id) {
+		return Inertia::render('UpdateProduct/index', [
+			'id' => $id,
+		]);
 	}
 }

@@ -39,16 +39,16 @@ func (p *ProductRepository) ListProducts() ([]model.Product, error) {
 	return products, nil
 }
 
-func (p *ProductRepository) ListProduct(productId string) ([]model.Product, error) {
-	var products []model.Product
+func (p *ProductRepository) ListProduct(productId string) (model.Product, error) {
+	var product model.Product
 
-	err := p.db.First(&products, "id = ?", productId).Error
+	err := p.db.First(&product, "id = ?", productId).Error
 
 	if err != nil {
 		fmt.Println(err)
-		return []model.Product{}, err
+		return model.Product{}, err
 	}
-	return products, nil
+	return product, nil
 }
 
 func (p *ProductRepository) UpdateProduct(productId string, productBody model.Product) (model.Product, error) {
@@ -61,7 +61,7 @@ func (p *ProductRepository) UpdateProduct(productId string, productBody model.Pr
 		return model.Product{}, findProductErr
 	}
 
-	updateProductErr := p.db.Model(product).Updates(productBody).Error
+	updateProductErr := p.db.Model(&product).Updates(productBody).Error
 
 	if updateProductErr != nil {
 		fmt.Println(updateProductErr)

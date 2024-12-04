@@ -15,6 +15,6 @@ func NewListProductUseCase(repository repository.ProductRepository) *ListProduct
 	}
 }
 
-func (pu *ListProductUseCase) Handle(productId string) ([]model.Product, error) {
+func (pu *ListProductUseCase) Handle(productId string) (model.Product, error) {
 	return pu.repository.ListProduct(productId)
 }

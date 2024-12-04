@@ -1,15 +1,18 @@
 import { router } from "@inertiajs/react";
 import axios from "axios";
+import { useRef } from "react";
 
-type ContactBody = {
+type ProductBody = {
 	name: string;
 	description: string;
-	price: string;
+	price: number;
 	category: string;
 };
 
 export function useCreateProduct() {
-	async function handleSubmit(product: ContactBody) {
+	const productFormRef = useRef(null);
+
+	async function handleSubmit(product: ProductBody) {
 		try {
 			await axios.post("/api/product", {
 				body: product,
@@ -23,5 +26,6 @@ export function useCreateProduct() {
 
 	return {
 		handleSubmit,
+		productFormRef,
 	};
 }
